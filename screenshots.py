@@ -33,3 +33,5 @@ class AutoLesyaMod(loader.Module):
 			return
 		if message.from_id == self._me.id:
 			return
+
+		
