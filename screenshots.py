@@ -1,7 +1,4 @@
-import numpy as np
 import pyautogui
-import imutils
-import cv2
 
 import time # time.time() для времени. Используется для промежутков бонуса, бизнеса и др
 import random
