@@ -14,8 +14,6 @@ from .. import loader, utils
 
 logger = logging.getLogger("Screenshots")
 
-
-
 @loader.tds
 class AutoLesyaMod(loader.Module):
 	"""Скриншот"""
