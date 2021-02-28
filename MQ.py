@@ -7,10 +7,10 @@ import textwrap
 @loader.tds
 class MicroQuotes2Mod(loader.Module):
 	"""Микроцитаты"""
-	strings = {"name": "MicroQuotes2"}
+	strings = {"name": "MicroQuotes"}
 	
-	async def mq2cmd(self, message):
-		""".mq2 <реплай на текст>"""
+	async def mqcmd(self, message):
+		""".mq <реплай на текст>"""
 		bw = False if utils.get_args(message) else True
 		reply = await message.get_reply_message()
 		if not reply or not reply.raw_text:
@@ -35,7 +35,7 @@ class MicroQuotes2Mod(loader.Module):
 			im = im.convert("L")
 		im = im.convert("RGBA").resize((512, 512))
 		w, h = im.size
-		w_, h_ = 20*(w//100), 20*(h//100)
+		w_, h_ = 10*(w//100), 10*(h//100)
 		im_ = Image.new("RGBA", (w-w_, h-h_), (0, 0, 0))
 		im_.putalpha(150) 
 		im.paste(im_, (w_//2, h_//2), im_)
@@ -44,6 +44,10 @@ class MicroQuotes2Mod(loader.Module):
 		x, y = (w-_w)//2, (h-_h)//2
 		draw.text((x, y), text=text, font=font, fill="#fff", align="center")
 		output=io.BytesIO()
+		im.save(output, "PNG")
+		output.seek(0)
+		await reply.reply(file=output)
+		im = im.convert("RGBA").resize((100, 100))
 		im.save(output, "PNG")
 		output.seek(0)
 		await reply.reply(file=output)
