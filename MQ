@@ -5,11 +5,11 @@ import requests
 import textwrap
 
 @loader.tds
-class MicroQuotesMod(loader.Module):
+class MicroQuotes2Mod(loader.Module):
 	"""Микроцитаты"""
 	strings = {"name": "MicroQuotes2"}
 	
-	async def mqcmd(self, message):
+	async def mq2cmd(self, message):
 		""".mq2 <реплай на текст>"""
 		bw = False if utils.get_args(message) else True
 		reply = await message.get_reply_message()
