@@ -7,10 +7,10 @@ import textwrap
 @loader.tds
 class MicroQuotesMod(loader.Module):
 	"""Микроцитаты"""
-	strings = {"name": "MicroQuotes"}
+	strings = {"name": "MicroQuotes2"}
 	
 	async def mqcmd(self, message):
-		""".mq <реплай на текст>"""
+		""".mq2 <реплай на текст>"""
 		bw = False if utils.get_args(message) else True
 		reply = await message.get_reply_message()
 		if not reply or not reply.raw_text:
