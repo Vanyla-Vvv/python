@@ -7,9 +7,6 @@ import io
 from telethon import types
 from .. import loader, utils
 
-lesya = 757724042
-lesya_chat = 1462806544
-
 TLG_JOHNNY = 419089999
 TLG_GAY = 944645249
 GAY = 0 #You a gay?
@@ -34,11 +31,20 @@ class AutoLesyaMod(loader.Module):
 		stats["id"] = text[id_start:id_end]
 		await self._client.send_message(lesya, "ID - "+str(stats.get("id")))
 
+	async def enablecupcmd(self, message):
+		"""Изменение руководителя"""
+		if GAY:
+			GAY = 1
+			await utils.answer(message, "@makcvvv - <code>Властелин очка</code>\n@karlend - <code>Братик</code>")
+		else:
+			GAY = 0
+			await utils.answer(message, "@makcvvv - <code>Братик</code>\n@karlend - <code>Властелин очка</code>")
+
 	async def receive(self, message): # Сообщение от бота
 		text = message.text.lower()
 		if not text:
 			return
-		# Инфа из профиля ага
+		# Инфа из профиля
 		if "ваш профиль" in text: # Инфа по профилю привет
 			await self.parseprofile(text)
 
