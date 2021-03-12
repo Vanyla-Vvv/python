@@ -7,6 +7,9 @@ import io
 from telethon import types
 from .. import loader, utils
 
+lesya = 757724042
+lesya_chat = 1462806544
+
 TLG_JOHNNY = 419089999
 TLG_GAY = 944645249
 GAY = 0 #You a gay?
