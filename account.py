@@ -18,7 +18,7 @@ stats = {}
 
 @loader.tds
 class AutoLesyaMod(loader.Module):
-	"""Диспетчер учетных записей"""
+	"""Account Dispatcher"""
 	strings = {"name": "Account Dispatcher"}
 
 	async def client_ready(self, client):
