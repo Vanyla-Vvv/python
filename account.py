@@ -38,7 +38,7 @@ class AutoLesyaMod(loader.Module):
 		text = message.text.lower()
 		if not text:
 			return
-		# Инфа из профиля
+		# Инфа из профиля ага
 		if "ваш профиль" in text: # Инфа по профилю привет
 			await self.parseprofile(text)
 
