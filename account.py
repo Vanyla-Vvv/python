@@ -31,7 +31,7 @@ class AutoLesyaMod(loader.Module):
 		stats["id"] = text[id_start:id_end]
 		await self._client.send_message(lesya, "ID - "+str(stats.get("id")))
 
-	async def enablecupcmd(self, message):
+	async def gaycmd(self, message):
 		"""Изменение руководителя"""
 		if GAY:
 			GAY = 1
