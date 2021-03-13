@@ -9,7 +9,6 @@ from .. import loader, utils
 
 TLG_JOHNNY = 419089999
 TLG_GAY = 944645249
-GAY = 0 #You a gay?
 
 stats = {}
 
@@ -33,13 +32,13 @@ class AutoLesyaMod(loader.Module):
 
 	async def gaycmd(self, message):
 		"""Изменение руководителя"""
-		global GAY
-		if GAY:
-			GAY = 1
-			await utils.answer(message, "@makcvvv - <code>Властелин очка</code>\n@karlend - <code>Братик</code>")
+		
+		if not stats.get("gay"):
+			stats["gay"] = True
+			await utils.answer(message, "@makcvvv - <b>Властелин очка</b>\n@karlend - <code>Братик</code>")
 		else:
-			GAY = 0
-			await utils.answer(message, "@makcvvv - <code>Братик</code>\n@karlend - <code>Властелин очка</code>")
+			stats["gay"] = False
+			await utils.answer(message, "@makcvvv - <code>Братик</code>\n@karlend - <b>Властелин очка</b>")
 
 	async def receive(self, message): # Сообщение от бота
 		text = message.text.lower()
