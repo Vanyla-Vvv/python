@@ -18,6 +18,7 @@ class AutoLesyaMod(loader.Module):
 	strings = {"name": "Account Dispatcher"}
 
 	async def client_ready(self, client):
+		self._me = await client.get_me()
 		await client.send_message(lesya, "Профиль")
 
 	async def parseprofile(self, text):
