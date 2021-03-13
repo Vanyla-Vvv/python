@@ -19,7 +19,7 @@ class AutoLesyaMod(loader.Module):
 	strings = {"name": "Account Dispatcher"}
 
 	async def client_ready(self, client):
-		await self._client.send_message(lesya, "Профиль")
+		await client.send_message(lesya, "Профиль")
 
 	async def parseprofile(self, text):
 		global stats
@@ -29,7 +29,7 @@ class AutoLesyaMod(loader.Module):
 		id_start = id_str + len(id_format)
 		id_end = text.find("\n", id_start)
 		stats["id"] = text[id_start:id_end]
-		await self._client.send_message(lesya, "ID - "+str(stats.get("id")))
+		await client.send_message(lesya, "ID - "+str(stats.get("id")))
 
 	async def gaycmd(self, message):
 		"""Изменение руководителя"""
