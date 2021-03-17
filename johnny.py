@@ -280,7 +280,7 @@ class AutoLesyaMod(loader.Module):
 				has = line[start+1:end]
 				has = int(has)
 				case["array"][len(case["array"])+1][1] = has
-		await self.send_bot(len("Кейсы: "+case["array"]+".")
+		await self.send_bot(len("Кейсы: "+case["array"]+"."))
 
 	def parsebonus(self, text):
 		print("parsing bonus")
