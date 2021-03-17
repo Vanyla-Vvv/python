@@ -340,7 +340,7 @@ class AutoLesyaMod(loader.Module):
 		self.set_time("pet_bitcoin", now + 60 * 61)
 		asyncio.ensure_future(self.send_bot("Ферма"))
 
-	async def case_testcmd(self, message):
+	async def case_testcmd(self, reply):
 		if not reply:
 			self.send_bot("<b>Нет сообщения!</b>")
 		text = reply.message
