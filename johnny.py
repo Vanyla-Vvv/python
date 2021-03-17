@@ -340,6 +340,23 @@ class AutoLesyaMod(loader.Module):
 		self.set_time("pet_bitcoin", now + 60 * 61)
 		asyncio.ensure_future(self.send_bot("Ферма"))
 
+	async def case_testcmd(self, message):
+		if not reply:
+			self.send_bot("<b>Нет сообщения!</b>")
+		text = reply.message
+		text = text.lower()
+		lines = text.split("\n")
+		case = {}
+		msg = ""
+		for line in lines:
+			print(line)
+			if "🔹 " in line and ". " in line:
+				start = line.find("🔹 ")
+				end = line.find(". ")
+				has = line[start+1:end]
+				has = int(has)
+				msg = msg+has+"\n"
+
 	def war_parsepoints(self, text):
 		text = text.lower()
 		lines = text.split("\n")
