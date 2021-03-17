@@ -25,6 +25,7 @@ times = {
 	"vip_bonus": 0,
 	"premium_bonus": 0,
 	"premium_money": 0,
+	"case": 0,
 
 	"work": 0,
 	"fight": 0,
@@ -44,6 +45,7 @@ times = {
 }
 
 stats = {}
+case = {}
 
 formats = {
 	"bonus": ("бонус будет доступен", "бонус станет доступен", "сможете получить бонус", "сможете получить v.i.p бонус", "сможете получить premium бонус"),
@@ -144,6 +146,7 @@ class AutoLesyaMod(loader.Module):
 		self._db = db
 		self.bot_loaddb()
 		await self.send_bot("Профиль")
+		await self.send_bot("Кейсы")
 		await asyncio.sleep(1)
 		asyncio.ensure_future(self.timer())
 
@@ -258,6 +261,27 @@ class AutoLesyaMod(loader.Module):
 		stats["bitcoin"] = "ферма:" in text
 		logger.info("Got profile")
 
+	async def parsecase(self, text):
+		global case
+		case["has"] = True
+		text = text.lower()
+		lines = text.split("\n")
+		for line in lines:
+			print(line)
+			if "🔹 " in line and ". " in line:
+				start = line.find("🔹 ")
+				end = line.find(". ")
+				has = line[start+1:end]
+				has = int(has)
+				case["array"][len(case["array"])+1][0] = has
+
+				start = line.find("(x")
+				end = line.find(")")
+				has = line[start+1:end]
+				has = int(has)
+				case["array"][len(case["array"])+1][1] = has
+		await self.send_bot(len("Кейсы: "+case["array"]+".")
+
 	def parsebonus(self, text):
 		print("parsing bonus")
 		print(text)
@@ -340,23 +364,6 @@ class AutoLesyaMod(loader.Module):
 		self.set_time("pet_bitcoin", now + 60 * 61)
 		asyncio.ensure_future(self.send_bot("Ферма"))
 
-	async def case_testcmd(self, reply):
-		if not reply:
-			self.send_bot("<b>Нет сообщения!</b>")
-		text = reply.message
-		text = text.lower()
-		lines = text.split("\n")
-		case = {}
-		msg = ""
-		for line in lines:
-			print(line)
-			if "🔹 " in line and ". " in line:
-				start = line.find("🔹 ")
-				end = line.find(". ")
-				has = line[start+1:end]
-				has = int(has)
-				msg = msg+has+"\n"
-
 	def war_parsepoints(self, text):
 		text = text.lower()
 		lines = text.split("\n")
@@ -413,6 +420,9 @@ class AutoLesyaMod(loader.Module):
 		# Инфа из профиля
 		if "ваш профиль" in text:  # Инфа по профилю привет
 			await self.parseprofile(text)
+
+		if "📦 Ваши кейсы:" in text:  # Инфа по кейсам привет
+			await self.parsecase(text)
 
 		if formats.get("banned") in text and not times.get("banned", None):
 			logger.info("banned. Getting time")
