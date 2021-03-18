@@ -264,23 +264,24 @@ class AutoLesyaMod(loader.Module):
 	async def parsecase(self, text):
 		global case
 		case["has"] = True
+		case["array"] = {}
 		text = text.lower()
 		lines = text.split("\n")
 		for line in lines:
-			print(line)
 			if "🔹 " in line and ". " in line:
-				start = line.find("🔹 ")
-				end = line.find(". ")
-				has = line[start+1:end]
-				has = int(has)
-				case["array"][len(case["array"])+1][0] = has
-
-				start = line.find("(x")
-				end = line.find(")")
-				has = line[start+1:end]
-				has = int(has)
-				case["array"][len(case["array"])+1][1] = has
-		await self.send_bot(len("Кейсы: "+case["array"]+"."))
+				start1 = line.find("🔹 ")
+				end1 = line.find(". ")
+				has1 = line[start1+2:end1]
+				
+				start2 = line.find("(x")
+				end2 = line.find(")")
+				has2 = line[start2+2:end2]
+				
+				case["array"][len(case["array"])+1] = [int(has1), int(has2)]
+				send_text = "📦 Кейсы: "
+				for i in range(len(case["array"])):
+					send_text = "\n🔹 "+case["array"][i+1][0]+" "case["array"][i+1][0]
+				await self.send_bot(send_text)
 
 	def parsebonus(self, text):
 		print("parsing bonus")
