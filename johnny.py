@@ -280,7 +280,7 @@ class AutoLesyaMod(loader.Module):
 				case["array"][len(case["array"])+1] = [int(has1), int(has2)]
 				send_text = "📦 Кейсы: "
 				for i in range(len(case["array"])):
-					send_text = "\n🔹 "+case["array"][i+1][0]+" "case["array"][i+1][0]
+					send_text = "\n🔹 "+case["array"][i+1][0]+" "+case["array"][i+1][0]
 				await self.send_bot(send_text)
 
 	def parsebonus(self, text):
