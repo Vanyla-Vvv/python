@@ -775,7 +775,7 @@ class AutoLesyaMod(loader.Module):
 		global stats
 		stats["captcha"] = bool
 
-	def pets_parse(text):
+	def pets_parse(self, text):
         allow = {
             "0": True,
             "1": True,
