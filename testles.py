@@ -149,7 +149,7 @@ formats = {
 	"work": "работа станет доступна через",
 	"work_new": "💡 доступна новая работа!",
 
-	"id": "🔎 id: ",
+	"id": "🔎 ID: ",
 	"status": "💎 статус:",
 	"bitcoin_farms": "🔋 биткоин ферма: ",
 
@@ -615,15 +615,19 @@ class AutoLesyaMod(loader.Module):
 		stats["has"] = True
 		for line in lines:
 			if formats.get("id") in line:
-				stats["id"] = line.rsplit(" ", 1)[1]
+				logger.info("Fuck: ", line)
+				line = line.replace(formats.get("id"), "")
+				stats["id"] = line.rsplit(" ", -1)[0]
+				logger.info("Fuck: ", line, line.rsplit(" ", -1)[0])
 			elif formats.get("status") in line:
 				stats["premium"] = "premium" in line
 				stats["vip"] = "статус: v.i.p" in line or "статус: premium" in line
 			elif formats.get("bitcoin_farms") in line:
 				line = line.replace(formats.get("bitcoin_farms"), "")
-				amount = line.split(" ", 1)[1]
-				amount = amount.replace(" ", "")
-				amount = amount[2:-1]
+				amount = line.replace(" ", "")
+				amount_start = amount.find("(")
+				amount_end = amount.find(")", amount_start)
+				amount = amount[amount_start+2:amount_end]
 				stats["bitcoin_farms"] = int(amount)
 			
 		stats["work"] = "работа:" in text
@@ -776,54 +780,53 @@ class AutoLesyaMod(loader.Module):
 		stats["captcha"] = bool
 
 	def pets_parse(self, text):
-        allow = {
-            "0": True,
-            "1": True,
-            "2": True,
-            "3": True,
-            "4": True,
-            "5": True,
-            "6": True,
-            "7": True,
-            "8": True,
-            "9": True,
-        }
-        arr = []
+		allow = {
+			"0": True,
+			"1": True,
+			"2": True,
+			"3": True,
+			"4": True,
+			"5": True,
+			"6": True,
+			"7": True,
+			"8": True,
+			"9": True,
+		}
+		arr = stats.get("pets_parsed") or []
 
-        text = text.replace("🔟", "10")
-        text = text.replace("⃣", "")
-        text = text.replace(".", "")
-        lines = text.split("\n")
-        for line in lines:
-            if not "|" in line:
-                continue
-            pet_id = ""
-            for i in range(4):
-                char = line[i]
-                if allow.get(char):
-                    pet_id = pet_id + char
-            hp_start = line.find("❤️")
-            hp_end = line.find("|", hp_start)
-            hp = line[hp_start+3:hp_end]
-            print(line, hp_start, hp_end)
-            dmg = 0
-            if "💢" in line:
-                dmg_start = line.find("💢")
-                dmg_end = line.find("|", dmg_start)
-                if dmg_end == -1:
-                    dmg = line[dmg_start+2:]
-                else:
-                    dmg = line[dmg_start+2:dmg_end]
-            mgc = 0
-            if "🧿" in line:
-                mgc_start = line.find("🧿")
-                mgc_end = line.find("|", mgc_start)
-                if mgc_end == -1:
-                    mgc = line[mgc_start+2:]
-                else:
-                    mgc = line[mgc_start+2:mgc_end]
-            arr.append({"ID": pet_id, "HP": int(hp), "DMG": floor(int(dmg) + int(mgc) * 1.1)})
-        arr.sort(key=lambda x: x.get("DMG"), reverse=True)
+		text = text.replace("🔟", "10")
+		text = text.replace("⃣", "")
+		text = text.replace(".", "")
+		lines = text.split("\n")
+		for line in lines:
+			if not "|" in line:
+				continue
+			pet_id = ""
+			for i in range(4):
+				char = line[i]
+				if allow.get(char):
+					pet_id = pet_id + char
+			hp_start = line.find("❤️")
+			hp_end = line.find("|", hp_start)
+			hp = line[hp_start+3:hp_end]
+			dmg = 0
+			if "💢" in line:
+				dmg_start = line.find("💢")
+				dmg_end = line.find("|", dmg_start)
+				if dmg_end == -1:
+					dmg = line[dmg_start+2:]
+				else:
+					dmg = line[dmg_start+2:dmg_end]
+			mgc = 0
+			if "🧿" in line:
+				mgc_start = line.find("🧿")
+				mgc_end = line.find("|", mgc_start)
+				if mgc_end == -1:
+					mgc = line[mgc_start+2:]
+				else:
+					mgc = line[mgc_start+2:mgc_end]
+			arr.append({"ID": pet_id, "HP": int(hp), "DMG": floor(int(dmg) + int(mgc) * 1.1)})
+		arr.sort(key=lambda x: x.get("DMG"), reverse=True)
 		return arr
 
 	async def lpetscmd(self, message):
@@ -944,7 +947,7 @@ class AutoLesyaMod(loader.Module):
 				asyncio.ensure_future(utils.answer(msg, "Питомцев нету"))
 				del stats["pets_waiting"]
 				del stats["pets_parsed"]
-			elif ", страница " in text:
+			elif "Ваши питомцы [" in text:
 				line = text.split("\n")[0]
 				page_info = line.rsplit(" ", 1)[1]
 				page_info = page_info.split("/")
