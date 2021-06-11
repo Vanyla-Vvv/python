@@ -149,7 +149,7 @@ formats = {
 	"work": "работа станет доступна через",
 	"work_new": "💡 доступна новая работа!",
 
-	"id": "🔎 ID: ",
+	"id": "🔎 id: ",
 	"status": "💎 статус:",
 	"bitcoin_farms": "🔋 биткоин ферма: ",
 
@@ -615,19 +615,21 @@ class AutoLesyaMod(loader.Module):
 		stats["has"] = True
 		for line in lines:
 			if formats.get("id") in line:
-				logger.info("Fuck: ", line)
-				line = line.replace(formats.get("id"), "")
-				stats["id"] = line.rsplit(" ", -1)[0]
-				logger.info("Fuck: ", line, line.rsplit(" ", -1)[0])
+				if "[" in line:
+					start = line.find(": ")
+					end = line.find("[")
+					my_id = line[start+2:end-2]
+					stats["id"] = my_id
+				else:
+					my_id = line.rsplit(" ", 1)[1]
+					stats["id"] = my_id
 			elif formats.get("status") in line:
 				stats["premium"] = "premium" in line
 				stats["vip"] = "статус: v.i.p" in line or "статус: premium" in line
 			elif formats.get("bitcoin_farms") in line:
-				line = line.replace(formats.get("bitcoin_farms"), "")
-				amount = line.replace(" ", "")
-				amount_start = amount.find("(")
-				amount_end = amount.find(")", amount_start)
-				amount = amount[amount_start+2:amount_end]
+				line = line.replace(" ", "")
+				start = line.find("(")
+				amount = line[start+2:-1]
 				stats["bitcoin_farms"] = int(amount)
 			
 		stats["work"] = "работа:" in text
@@ -826,6 +828,7 @@ class AutoLesyaMod(loader.Module):
 				else:
 					mgc = line[mgc_start+2:mgc_end]
 			arr.append({"ID": pet_id, "HP": int(hp), "DMG": floor(int(dmg) + int(mgc) * 1.1)})
+			logger.info(""+pet_id+" "+hp)
 		arr.sort(key=lambda x: x.get("DMG"), reverse=True)
 		return arr
 
@@ -948,6 +951,7 @@ class AutoLesyaMod(loader.Module):
 				del stats["pets_waiting"]
 				del stats["pets_parsed"]
 			elif "Ваши питомцы [" in text:
+				logger.info("Pizdez a ne pitomchi")
 				line = text.split("\n")[0]
 				page_info = line.rsplit(" ", 1)[1]
 				page_info = page_info.split("/")
@@ -1059,12 +1063,14 @@ class AutoLesyaMod(loader.Module):
 			elif ", информация по клановой войне:" in text or ", клановая война:" in text: # Подготовка или уже сражение
 				if "примерное время до окончания отборочного этапа:" in text:
 					self.set_time("clan_war", now + 3600)
+					times["clan_war_upgrade"] = 0
 				elif "до конца отборочного этапа:" in text: # Идёт сбор питомцев с боёв. Нужно сделать автораспределение очков
 					line = text.split("\n")[-1]
 					timestr = line.rsplit(" ", 1)[1]
 					if timestr and ":" in timestr:
 						wait = convert(timestr)
 						self.set_time("clan_war", now + wait + 60)
+						times["clan_war_upgrade"] = 0
 				elif "финальная битва через:" in text:
 					line = text.split("\n")[-2]
 					timestr = line.rsplit(" ", 1)[1]
@@ -1094,6 +1100,7 @@ class AutoLesyaMod(loader.Module):
 					if timestr and ":" in timestr:
 						wait = convert(timestr)
 						self.set_time("clan_war", now + wait + 60)
+						times["clan_war_upgrade"] = 0
 
 		if settings.get("opencase"):
 			if ", чтобы открывать несколько кейсов за раз, завершите исследование" in text: # На пустышках максимум можно 1, без указания количества
@@ -1348,6 +1355,7 @@ class AutoLesyaMod(loader.Module):
 			if settings.get("clan_war"):
 				upgrade = times.get("clan_war_upgrade")
 				if now > upgrade and upgrade != 0:
+					times["clan_war_upgrade"] = now + 300
 					asyncio.ensure_future(self.send_bot("Кв"))
 				elif now > times.get("clan_war"):
 					times["clan_war"] = now + 600
